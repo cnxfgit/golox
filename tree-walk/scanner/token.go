@@ -61,8 +61,8 @@ type Token struct {
 	line    uint
 }
 
-func NewToken(typ TokenType, lexeme string, literal object.Object, line uint) *Token {
-	return &Token{
+func NewToken(typ TokenType, lexeme string, literal object.Object, line uint) Token {
+	return Token{
 		typ,
 		lexeme,
 		literal,

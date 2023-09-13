@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
+	"golox/tree-walk/parser"
+	"golox/tree-walk/runtime"
 	"golox/tree-walk/scanner"
 	"os"
 )
-
-var hadError bool = false
-var hadRuntimeError bool = false
 
 func main() {
 	if len(os.Args) > 2 {
@@ -30,15 +29,16 @@ func runFile(path string) {
 
 	run(source)
 
-	if hadError {
+	if runtime.HadError {
 		os.Exit(65)
 	}
-	if hadRuntimeError {
+	if runtime.HadRuntimeError {
 		os.Exit(70)
 	}
 }
 
 func run(source string) {
-	_ = scanner.NewScanner(source)
-
+	s := scanner.NewScanner(source)
+	tokens := s.ScanTokens()
+	_ = parser.NewParser(tokens)
 }
