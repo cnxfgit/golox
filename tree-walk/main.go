@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"golox/tree-walk/parser"
-	"golox/tree-walk/runtime"
-	"golox/tree-walk/scanner"
+	"golox/tree-walk/rt"
+	"golox/tree-walk/scan"
 	"os"
 )
 
@@ -29,16 +29,16 @@ func runFile(path string) {
 
 	run(source)
 
-	if runtime.HadError {
+	if rt.HadError {
 		os.Exit(65)
 	}
-	if runtime.HadRuntimeError {
+	if rt.HadRuntimeError {
 		os.Exit(70)
 	}
 }
 
 func run(source string) {
-	s := scanner.NewScanner(source)
+	s := scan.NewScanner(source)
 	tokens := s.ScanTokens()
 	_ = parser.NewParser(tokens)
 }

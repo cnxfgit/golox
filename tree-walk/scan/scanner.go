@@ -1,36 +1,37 @@
-package scanner
+package scan
 
 import (
 	"golox/tree-walk/object"
-	"golox/tree-walk/runtime"
+	"golox/tree-walk/rt"
+	"golox/tree-walk/token"
 	"strconv"
 )
 
-var keywords map[string]TokenType
+var keywords map[string]token.TokenType
 
 func init() {
-	keywords = make(map[string]TokenType)
-	keywords["and"] = And
-	keywords["class"] = Class
-	keywords["else"] = Else
-	keywords["false"] = False
-	keywords["for"] = For
-	keywords["fun"] = Fun
-	keywords["if"] = If
-	keywords["nil"] = Nil
-	keywords["or"] = Or
-	keywords["print"] = Print
-	keywords["return"] = Return
-	keywords["super"] = Super
-	keywords["this"] = This
-	keywords["true"] = True
-	keywords["var"] = Var
-	keywords["while"] = While
+	keywords = make(map[string]token.TokenType)
+	keywords["and"] = token.And
+	keywords["class"] = token.Class
+	keywords["else"] = token.Else
+	keywords["false"] = token.False
+	keywords["for"] = token.For
+	keywords["fun"] = token.Fun
+	keywords["if"] = token.If
+	keywords["nil"] = token.Nil
+	keywords["or"] = token.Or
+	keywords["print"] = token.Print
+	keywords["return"] = token.Return
+	keywords["super"] = token.Super
+	keywords["this"] = token.This
+	keywords["true"] = token.True
+	keywords["var"] = token.Var
+	keywords["while"] = token.While
 }
 
 type Scanner struct {
 	source  string
-	tokens  []Token
+	tokens  []token.Token
 	start   uint
 	current uint
 	line    uint
@@ -39,19 +40,19 @@ type Scanner struct {
 func NewScanner(source string) *Scanner {
 	return &Scanner{
 		source:  source,
-		tokens:  make([]Token, 0),
+		tokens:  make([]token.Token, 0),
 		start:   0,
 		current: 0,
 		line:    1,
 	}
 }
 
-func (s *Scanner) ScanTokens() []Token {
+func (s *Scanner) ScanTokens() []token.Token {
 	for !s.isAtEnd() {
 		s.start = s.current
 		s.scanToken()
 	}
-	s.tokens = append(s.tokens, NewToken(Eof, "", nil, s.line))
+	s.tokens = append(s.tokens, token.NewToken(token.Eof, "", nil, s.line))
 	return s.tokens
 }
 
@@ -59,50 +60,50 @@ func (s *Scanner) scanToken() {
 	c := s.advance()
 	switch c {
 	case '(':
-		s.addTokenTyp(LeftParen)
+		s.addTokenTyp(token.LeftParen)
 	case ')':
-		s.addTokenTyp(RightParen)
+		s.addTokenTyp(token.RightParen)
 	case '{':
-		s.addTokenTyp(LeftBrace)
+		s.addTokenTyp(token.LeftBrace)
 	case '}':
-		s.addTokenTyp(RightBrace)
+		s.addTokenTyp(token.RightBrace)
 	case ',':
-		s.addTokenTyp(Comma)
+		s.addTokenTyp(token.Comma)
 	case '.':
-		s.addTokenTyp(Dot)
+		s.addTokenTyp(token.Dot)
 	case '-':
-		s.addTokenTyp(Minus)
+		s.addTokenTyp(token.Minus)
 	case '+':
-		s.addTokenTyp(Plus)
+		s.addTokenTyp(token.Plus)
 	case ';':
-		s.addTokenTyp(Semicolon)
+		s.addTokenTyp(token.Semicolon)
 	case '*':
-		s.addTokenTyp(Star)
+		s.addTokenTyp(token.Star)
 	case '!':
 		{
 			if s.match('=') {
-				s.addTokenTyp(BangEqual)
+				s.addTokenTyp(token.BangEqual)
 			} else {
-				s.addTokenTyp(Bang)
+				s.addTokenTyp(token.Bang)
 			}
 		}
 	case '=':
 		if s.match('=') {
-			s.addTokenTyp(EqualEqual)
+			s.addTokenTyp(token.EqualEqual)
 		} else {
-			s.addTokenTyp(Equal)
+			s.addTokenTyp(token.Equal)
 		}
 	case '<':
 		if s.match('=') {
-			s.addTokenTyp(LessEqual)
+			s.addTokenTyp(token.LessEqual)
 		} else {
-			s.addTokenTyp(Less)
+			s.addTokenTyp(token.Less)
 		}
 	case '>':
 		if s.match('=') {
-			s.addTokenTyp(GreaterEqual)
+			s.addTokenTyp(token.GreaterEqual)
 		} else {
-			s.addTokenTyp(Greater)
+			s.addTokenTyp(token.Greater)
 		}
 	case '/':
 		if s.match('/') {
@@ -111,7 +112,7 @@ func (s *Scanner) scanToken() {
 				s.advance()
 			}
 		} else {
-			s.addTokenTyp(Slash)
+			s.addTokenTyp(token.Slash)
 		}
 	case ' ':
 	case '\r':
@@ -127,7 +128,7 @@ func (s *Scanner) scanToken() {
 		} else if isAlpha(c) {
 			s.identifier()
 		} else {
-			runtime.ErrorLine(s.line, "Unexpected character.")
+			rt.ErrorLine(s.line, "Unexpected character.")
 		}
 	}
 }
@@ -140,7 +141,7 @@ func (s *Scanner) identifier() {
 	text := s.source[s.start:s.current]
 	typ, ok := keywords[text]
 	if !ok {
-		typ = Identifier
+		typ = token.Identifier
 	}
 
 	s.addTokenTyp(typ)
@@ -160,7 +161,7 @@ func (s *Scanner) number() {
 		}
 	}
 	num, _ := strconv.ParseFloat(s.source[s.start:s.current], 64)
-	s.addToken(Number, num)
+	s.addToken(token.Number, num)
 }
 
 func (s *Scanner) string() {
@@ -172,7 +173,7 @@ func (s *Scanner) string() {
 	}
 
 	if s.isAtEnd() {
-		runtime.ErrorLine(s.line, "Unterminated string.")
+		rt.ErrorLine(s.line, "Unterminated string.")
 		return
 	}
 
@@ -181,7 +182,7 @@ func (s *Scanner) string() {
 
 	// Trim the surrounding quotes.
 	value := s.source[s.start+1 : s.current-1]
-	s.addToken(String, value)
+	s.addToken(token.String, value)
 }
 
 func (s *Scanner) peekNext() byte {
@@ -210,13 +211,13 @@ func (s *Scanner) match(expected byte) bool {
 	return true
 }
 
-func (s *Scanner) addTokenTyp(typ TokenType) {
+func (s *Scanner) addTokenTyp(typ token.TokenType) {
 	s.addToken(typ, nil)
 }
 
-func (s *Scanner) addToken(typ TokenType, literal object.Object) {
+func (s *Scanner) addToken(typ token.TokenType, literal object.Object) {
 	text := s.source[s.start:s.current]
-	s.tokens = append(s.tokens, NewToken(typ, text, literal, s.line))
+	s.tokens = append(s.tokens, token.NewToken(typ, text, literal, s.line))
 }
 
 func (s *Scanner) isAtEnd() bool {

@@ -1,13 +1,13 @@
 package parser
 
-import "golox/tree-walk/scanner"
+import "golox/tree-walk/token"
 
 type Parser struct {
-	tokens  []scanner.Token
+	tokens  []token.Token
 	current uint
 }
 
-func NewParser(tokens []scanner.Token) *Parser {
+func NewParser(tokens []token.Token) *Parser {
 	return &Parser{
 		tokens:  tokens,
 		current: 0,
