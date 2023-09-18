@@ -1,133 +1,133 @@
 package expr
 
 import (
-	"golox/tree-walk/object"
+	. "golox/tree-walk/object"
 	"golox/tree-walk/token"
 )
 
 type Expr interface {
-	Accept(v Visitor) object.Object
+	Accept(v Visitor) Object
 }
 
 type Visitor interface {
-	visitAssignExpr(expr *Assign) object.Object
-	visitBinaryExpr(expr *Binary) object.Object
-	visitCallExpr(expr *Call) object.Object
-	visitGetExpr(expr *Get) object.Object
-	visitGroupingExpr(expr *Grouping) object.Object
-	visitLiteralExpr(expr *Literal) object.Object
-	visitLogicalExpr(expr *Logical) object.Object
-	visitSetExpr(expr *Set) object.Object
-	visitSuperExpr(expr *Super) object.Object
-	visitThisExpr(expr *This) object.Object
-	visitUnaryExpr(expr *Unary) object.Object
-	visitVariableExpr(expr *Variable) object.Object
+	visitAssignExpr(expr *Assign) Object
+	visitBinaryExpr(expr *Binary) Object
+	visitCallExpr(expr *Call) Object
+	visitGetExpr(expr *Get) Object
+	visitGroupingExpr(expr *Grouping) Object
+	visitLiteralExpr(expr *Literal) Object
+	visitLogicalExpr(expr *Logical) Object
+	visitSetExpr(expr *Set) Object
+	visitSuperExpr(expr *Super) Object
+	visitThisExpr(expr *This) Object
+	visitUnaryExpr(expr *Unary) Object
+	visitVariableExpr(expr *Variable) Object
 }
 
 type Assign struct {
-	name  token.Token
-	value Expr
+	Name  token.Token
+	Value Expr
 }
 
-func (a *Assign) Accept(v Visitor) object.Object {
+func (a *Assign) Accept(v Visitor) Object {
 	return v.visitAssignExpr(a)
 }
 
 type Binary struct {
-	left     Expr
-	operator token.Token
-	right    Expr
+	Left     Expr
+	Operator token.Token
+	Right    Expr
 }
 
-func (b *Binary) Accept(v Visitor) object.Object {
+func (b *Binary) Accept(v Visitor) Object {
 	return v.visitBinaryExpr(b)
 }
 
 type Call struct {
-	callee    Expr
-	paren     token.Token
-	arguments []Expr
+	Callee    Expr
+	Paren     token.Token
+	Arguments []Expr
 }
 
-func (c *Call) Accept(v Visitor) object.Object {
+func (c *Call) Accept(v Visitor) Object {
 	return v.visitCallExpr(c)
 }
 
 type Get struct {
-	object Expr
-	name   token.Token
+	Object Expr
+	Name   token.Token
 }
 
-func (g *Get) Accept(v Visitor) object.Object {
+func (g *Get) Accept(v Visitor) Object {
 	return v.visitGetExpr(g)
 }
 
 type Grouping struct {
-	expression Expr
+	Expression Expr
 }
 
-func (g *Grouping) Accept(v Visitor) object.Object {
+func (g *Grouping) Accept(v Visitor) Object {
 	return v.visitGroupingExpr(g)
 }
 
 type Literal struct {
-	value object.Object
+	Value Object
 }
 
-func (l *Literal) Accept(v Visitor) object.Object {
+func (l *Literal) Accept(v Visitor) Object {
 	return v.visitLiteralExpr(l)
 }
 
 type Logical struct {
-	left     Expr
-	operator token.Token
-	right    Expr
+	Left     Expr
+	Operator token.Token
+	Right    Expr
 }
 
-func (l *Logical) Accept(v Visitor) object.Object {
+func (l *Logical) Accept(v Visitor) Object {
 	return v.visitLogicalExpr(l)
 }
 
 type Set struct {
-	object Expr
-	name   token.Token
-	value  Expr
+	Object Expr
+	Name   token.Token
+	Value  Expr
 }
 
-func (s *Set) Accept(v Visitor) object.Object {
+func (s *Set) Accept(v Visitor) Object {
 	return v.visitSetExpr(s)
 }
 
 type Super struct {
-	keyword token.Token
-	method  token.Token
+	Keyword token.Token
+	Method  token.Token
 }
 
-func (s *Super) Accept(v Visitor) object.Object {
+func (s *Super) Accept(v Visitor) Object {
 	return v.visitSuperExpr(s)
 }
 
 type This struct {
-	keyword token.Token
+	Keyword token.Token
 }
 
-func (t *This) Accept(v Visitor) object.Object {
+func (t *This) Accept(v Visitor) Object {
 	return v.visitThisExpr(t)
 }
 
 type Unary struct {
-	operator token.Token
-	right    Expr
+	Operator token.Token
+	Right    Expr
 }
 
-func (u *Unary) Accept(v Visitor) object.Object {
+func (u *Unary) Accept(v Visitor) Object {
 	return v.visitUnaryExpr(u)
 }
 
 type Variable struct {
-	name token.Token
+	Name token.Token
 }
 
-func (va *Variable) Accept(v Visitor) object.Object {
+func (va *Variable) Accept(v Visitor) Object {
 	return v.visitVariableExpr(va)
 }

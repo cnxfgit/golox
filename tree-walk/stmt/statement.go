@@ -23,7 +23,7 @@ type Visitor interface {
 }
 
 type Block struct {
-	statements []Stmt
+	Statements []Stmt
 }
 
 func (b *Block) Accept(v Visitor) object.Object {
@@ -31,9 +31,9 @@ func (b *Block) Accept(v Visitor) object.Object {
 }
 
 type Class struct {
-	name       token.Token
-	superclass expr.Variable
-	methods    []Function
+	Name       token.Token
+	Superclass *expr.Variable
+	Methods    []*Function
 }
 
 func (c *Class) Accept(v Visitor) object.Object {
@@ -41,7 +41,7 @@ func (c *Class) Accept(v Visitor) object.Object {
 }
 
 type Expression struct {
-	expression expr.Expr
+	Expression expr.Expr
 }
 
 func (e *Expression) Accept(v Visitor) object.Object {
@@ -49,9 +49,9 @@ func (e *Expression) Accept(v Visitor) object.Object {
 }
 
 type Function struct {
-	name   token.Token
-	params []token.Token
-	body   []Stmt
+	Name   token.Token
+	Params []token.Token
+	Body   []Stmt
 }
 
 func (f *Function) Accept(v Visitor) object.Object {
@@ -59,9 +59,9 @@ func (f *Function) Accept(v Visitor) object.Object {
 }
 
 type If struct {
-	condition  expr.Expr
-	thenBranch Stmt
-	elseBranch Stmt
+	Condition  expr.Expr
+	ThenBranch Stmt
+	ElseBranch Stmt
 }
 
 func (i *If) Accept(v Visitor) object.Object {
@@ -69,7 +69,7 @@ func (i *If) Accept(v Visitor) object.Object {
 }
 
 type Print struct {
-	expression expr.Expr
+	Expression expr.Expr
 }
 
 func (p *Print) Accept(v Visitor) object.Object {
@@ -77,8 +77,8 @@ func (p *Print) Accept(v Visitor) object.Object {
 }
 
 type Return struct {
-	keyword token.Token
-	value   expr.Expr
+	Keyword token.Token
+	Value   expr.Expr
 }
 
 func (r *Return) Accept(v Visitor) object.Object {
@@ -86,8 +86,8 @@ func (r *Return) Accept(v Visitor) object.Object {
 }
 
 type Var struct {
-	name        token.Token
-	initializer expr.Expr
+	Name        token.Token
+	Initializer expr.Expr
 }
 
 func (va *Var) Accept(v Visitor) object.Object {
@@ -95,6 +95,10 @@ func (va *Var) Accept(v Visitor) object.Object {
 }
 
 type While struct {
-	condition expr.Expr
-	body      Stmt
+	Condition expr.Expr
+	Body      Stmt
+}
+
+func (w *While) Accept(v Visitor) object.Object {
+	return v.visitWhileStmt(w)
 }

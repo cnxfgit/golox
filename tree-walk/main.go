@@ -40,5 +40,6 @@ func runFile(path string) {
 func run(source string) {
 	s := scan.NewScanner(source)
 	tokens := s.ScanTokens()
-	_ = parser.NewParser(tokens)
+	p := parser.NewParser(tokens)
+	p.Parse()
 }

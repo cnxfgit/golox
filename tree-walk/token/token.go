@@ -55,10 +55,10 @@ const (
 )
 
 type Token struct {
-	typ     TokenType
-	lexeme  string
-	literal object.Object
-	line    uint
+	Type    TokenType
+	Lexeme  string
+	Literal object.Object
+	Line    uint
 }
 
 func NewToken(typ TokenType, lexeme string, literal object.Object, line uint) Token {
@@ -71,5 +71,5 @@ func NewToken(typ TokenType, lexeme string, literal object.Object, line uint) To
 }
 
 func (t *Token) toString() string {
-	return fmt.Sprintf("%d %s %v", t.typ, t.lexeme, t.literal)
+	return fmt.Sprintf("%d %s %v", t.Type, t.Lexeme, t.Literal)
 }
