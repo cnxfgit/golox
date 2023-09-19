@@ -161,7 +161,7 @@ func (s *Scanner) number() {
 		}
 	}
 	num, _ := strconv.ParseFloat(s.source[s.start:s.current], 64)
-	s.addToken(token.Number, num)
+	s.addToken(token.Number, object.Number(num))
 }
 
 func (s *Scanner) string() {
@@ -182,7 +182,7 @@ func (s *Scanner) string() {
 
 	// Trim the surrounding quotes.
 	value := s.source[s.start+1 : s.current-1]
-	s.addToken(token.String, value)
+	s.addToken(token.String, object.String(value))
 }
 
 func (s *Scanner) peekNext() byte {

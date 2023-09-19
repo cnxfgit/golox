@@ -41,5 +41,10 @@ func run(source string) {
 	s := scan.NewScanner(source)
 	tokens := s.ScanTokens()
 	p := parser.NewParser(tokens)
-	p.Parse()
+	_ = p.Parse()
+
+	if rt.HadError {
+		return
+	}
+
 }

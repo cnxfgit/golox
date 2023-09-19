@@ -2,6 +2,7 @@ package parser
 
 import (
 	"golox/tree-walk/expr"
+	"golox/tree-walk/object"
 	"golox/tree-walk/rt"
 	. "golox/tree-walk/stmt"
 	"golox/tree-walk/token"
@@ -78,7 +79,7 @@ func (p *Parser) forStatement() Stmt {
 	}
 
 	if condition == nil {
-		condition = &expr.Literal{Value: true}
+		condition = &expr.Literal{Value: object.Boolean(true)}
 	}
 	body = &While{Condition: condition, Body: body}
 
@@ -333,10 +334,10 @@ func (p *Parser) finishCall(callee expr.Expr) expr.Expr {
 
 func (p *Parser) primary() expr.Expr {
 	if p.match(token.False) {
-		return &expr.Literal{Value: false}
+		return &expr.Literal{Value: object.Boolean(false)}
 	}
 	if p.match(token.True) {
-		return &expr.Literal{Value: true}
+		return &expr.Literal{Value: object.Boolean(true)}
 	}
 	if p.match(token.Nil) {
 		return &expr.Literal{Value: nil}
@@ -482,12 +483,4 @@ func (p *Parser) isAtEnd() bool {
 
 func (p *Parser) peek() token.Token {
 	return p.tokens[p.current]
-}
-
-type ParseError struct {
-	message string
-}
-
-func (e *ParseError) Error() string {
-	return e.message
 }

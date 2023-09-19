@@ -11,15 +11,15 @@ type Stmt interface {
 }
 
 type Visitor interface {
-	visitBlockStmt(stmt *Block) object.Object
-	visitClassStmt(stmt *Class) object.Object
-	visitExpressionStmt(stmt *Expression) object.Object
-	visitFunctionStmt(stmt *Function) object.Object
-	visitIfStmt(stmt *If) object.Object
-	visitPrintStmt(stmt *Print) object.Object
-	visitReturnStmt(stmt *Return) object.Object
-	visitVarStmt(stmt *Var) object.Object
-	visitWhileStmt(stmt *While) object.Object
+	VisitBlockStmt(stmt *Block) object.Object
+	VisitClassStmt(stmt *Class) object.Object
+	VisitExpressionStmt(stmt *Expression) object.Object
+	VisitFunctionStmt(stmt *Function) object.Object
+	VisitIfStmt(stmt *If) object.Object
+	VisitPrintStmt(stmt *Print) object.Object
+	VisitReturnStmt(stmt *Return) object.Object
+	VisitVarStmt(stmt *Var) object.Object
+	VisitWhileStmt(stmt *While) object.Object
 }
 
 type Block struct {
@@ -27,7 +27,7 @@ type Block struct {
 }
 
 func (b *Block) Accept(v Visitor) object.Object {
-	return v.visitBlockStmt(b)
+	return v.VisitBlockStmt(b)
 }
 
 type Class struct {
@@ -37,7 +37,7 @@ type Class struct {
 }
 
 func (c *Class) Accept(v Visitor) object.Object {
-	return v.visitClassStmt(c)
+	return v.VisitClassStmt(c)
 }
 
 type Expression struct {
@@ -45,7 +45,7 @@ type Expression struct {
 }
 
 func (e *Expression) Accept(v Visitor) object.Object {
-	return v.visitExpressionStmt(e)
+	return v.VisitExpressionStmt(e)
 }
 
 type Function struct {
@@ -55,7 +55,7 @@ type Function struct {
 }
 
 func (f *Function) Accept(v Visitor) object.Object {
-	return v.visitFunctionStmt(f)
+	return v.VisitFunctionStmt(f)
 }
 
 type If struct {
@@ -65,7 +65,7 @@ type If struct {
 }
 
 func (i *If) Accept(v Visitor) object.Object {
-	return v.visitIfStmt(i)
+	return v.VisitIfStmt(i)
 }
 
 type Print struct {
@@ -73,7 +73,7 @@ type Print struct {
 }
 
 func (p *Print) Accept(v Visitor) object.Object {
-	return v.visitPrintStmt(p)
+	return v.VisitPrintStmt(p)
 }
 
 type Return struct {
@@ -82,7 +82,7 @@ type Return struct {
 }
 
 func (r *Return) Accept(v Visitor) object.Object {
-	return v.visitReturnStmt(r)
+	return v.VisitReturnStmt(r)
 }
 
 type Var struct {
@@ -91,7 +91,7 @@ type Var struct {
 }
 
 func (va *Var) Accept(v Visitor) object.Object {
-	return v.visitVarStmt(va)
+	return v.VisitVarStmt(va)
 }
 
 type While struct {
@@ -100,5 +100,5 @@ type While struct {
 }
 
 func (w *While) Accept(v Visitor) object.Object {
-	return v.visitWhileStmt(w)
+	return v.VisitWhileStmt(w)
 }

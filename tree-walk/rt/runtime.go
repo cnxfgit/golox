@@ -26,3 +26,8 @@ func report(line uint, where string, message string) {
 	_, _ = fmt.Fprintln(os.Stderr, "[line "+strconv.Itoa(int(line))+"] Error"+where+": "+message)
 	HadError = true
 }
+
+func ErrorRuntime(error RuntimeError) {
+	_, _ = fmt.Fprintln(os.Stderr, error.Message+"\n[line "+strconv.Itoa(int(error.Token.Line))+"]")
+	HadRuntimeError = true
+}
