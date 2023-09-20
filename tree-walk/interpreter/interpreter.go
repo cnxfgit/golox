@@ -96,8 +96,13 @@ func (i *Interpreter) VisitClassStmt(stmt *stmt.Class) Object {
 		function := NewLoxFunction(method, i.Environment, method.Name.Lexeme == "init")
 		methods[method.Name.Lexeme] = function
 	}
-	sc := superclass.(*LoxClass)
-	class := NewLoxClass(stmt.Name.Lexeme, sc, methods)
+
+	var class *LoxClass
+	if superclass != nil {
+		class = NewLoxClass(stmt.Name.Lexeme, superclass.(*LoxClass), methods)
+	} else {
+		class = NewLoxClass(stmt.Name.Lexeme, nil, methods)
+	}
 
 	if superclass != nil {
 		i.Environment = i.Environment.Enclosing
