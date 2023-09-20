@@ -225,7 +225,9 @@ func (s *Scanner) isAtEnd() bool {
 }
 
 func (s *Scanner) advance() byte {
-	return s.source[s.current]
+	i := s.current
+	s.current += 1
+	return s.source[i]
 }
 
 func isAlpha(c byte) bool {

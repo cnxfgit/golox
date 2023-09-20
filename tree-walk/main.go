@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"golox/tree-walk/interpreter"
 	"golox/tree-walk/parser"
+	"golox/tree-walk/resolver"
 	"golox/tree-walk/rt"
 	"golox/tree-walk/scan"
 	"os"
@@ -38,13 +40,22 @@ func runFile(path string) {
 }
 
 func run(source string) {
+	i := interpreter.NewInterpreter()
 	s := scan.NewScanner(source)
 	tokens := s.ScanTokens()
 	p := parser.NewParser(tokens)
-	_ = p.Parse()
+	statements := p.Parse()
 
 	if rt.HadError {
 		return
 	}
 
+	r := resolver.NewResolver(i)
+	r.Resolve(statements)
+
+	if rt.HadError {
+		return
+	}
+
+	i.Interpret(statements)
 }
