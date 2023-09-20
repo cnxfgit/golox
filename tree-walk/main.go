@@ -1,14 +1,17 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"golox/tree-walk/interpreter"
+	. "golox/tree-walk/interpreter"
 	"golox/tree-walk/parser"
 	"golox/tree-walk/resolver"
 	"golox/tree-walk/rt"
 	"golox/tree-walk/scan"
 	"os"
 )
+
+var interpreter = NewInterpreter()
 
 func main() {
 	if len(os.Args) > 2 {
@@ -22,7 +25,18 @@ func main() {
 }
 
 func runPrompt() {
+	scanner := bufio.NewScanner(os.Stdin)
 
+	for {
+		fmt.Print("> ")
+		ok := scanner.Scan()
+		line := scanner.Text()
+		if !ok {
+			break
+		}
+		run(line)
+		rt.HadError = false
+	}
 }
 
 func runFile(path string) {
@@ -40,7 +54,7 @@ func runFile(path string) {
 }
 
 func run(source string) {
-	i := interpreter.NewInterpreter()
+
 	s := scan.NewScanner(source)
 	tokens := s.ScanTokens()
 	p := parser.NewParser(tokens)
@@ -50,12 +64,12 @@ func run(source string) {
 		return
 	}
 
-	r := resolver.NewResolver(i)
+	r := resolver.NewResolver(interpreter)
 	r.Resolve(statements)
 
 	if rt.HadError {
 		return
 	}
 
-	i.Interpret(statements)
+	interpreter.Interpret(statements)
 }
